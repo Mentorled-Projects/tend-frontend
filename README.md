@@ -64,8 +64,113 @@ Tend helps bridge that gap by providing insights into team morale, while keeping
 ---
 
 ## Project Structure
+```bash
+tend-wellness-tracker/
+├── app/                     # App Router structure
+│   ├── (landing)/           # Landing page group
+│   │   ├── page.tsx         # Homepage          
+│   │   └── layout.tsx       # Landing page layout with header/footer
+│   ├── auth/                # Authentication routes
+│   │   ├── login/           # Login page
+│   │   ├── signup/          # Signup page
+│   │   └── reset-password/  # Password reset flow
+│   ├── admin/               # Admin portal (protected)
+│   │   ├── dashboard/       # Dashboard home
+│   │   ├── resources/       # Resource management
+│   │   ├── team/            # Team management
+│   │   └── layout.tsx       # Admin layout with sidebar
+│   ├── member/              # Team member portal (protected)
+│   │   ├── check-in/        # Weekly check-in
+│   │   ├── journal/         # Mood journal
+│   │   ├── resources/       # View resources
+│   │   └── layout.tsx       # Member layout
+│   ├── api/                 # API routes
+│   │   ├── auth/            # Auth endpoints
+│   │   ├── admin/           # Admin endpoints
+│   │   └── member/          # Member endpoints
+│   └── layout.tsx           # Root layout
+├── components/              # Shared UI components
+├── lib/                     # Utility functions, API clients
+├── hooks/                   # Custom React hooks
+├── providers/               # Context providers
+├── types/                   # TypeScript interfaces, enums, and types
+│   ├── auth.ts              # Login/signup-related types
+│   ├── user.ts              # User and admin types
+│   ├── mood.ts              # Mood, energy, check-in types
+│   ├── journal.ts           # Mood journal entry types
+│   └── resource.ts          # Wellness resource types
+└── public/                  # Static assets
+```
 
 ---
+
+## System Architecture (User flow)
+
+```mermaid
+graph TD
+  A[Frontend]
+
+    %% Landing page flow
+    Start(User Visits TEND Website) --> Landing[Landing Page]
+    Landing --> Authentication{Authentication?}
+    
+    %% Authentication flow
+    Authentication -->|Sign Up| TeamLeadSignup[Team Lead Signup
+    Name + Email + Password]
+    Authentication -->|Login| UserLogin[User Login
+    Email + Password]
+    Authentication -->|Password Reset| ResetFlow[Password Reset Flow]
+    
+    ResetFlow --> RequestReset[Request Reset]
+    RequestReset --> EmailConfirm[Receive Email Link]
+    EmailConfirm --> CreateNewPass[Create New Password]
+    CreateNewPass --> UserLogin
+    
+    TeamLeadSignup --> RegisterTeam[Register Team Members]
+    RegisterTeam --> AdminDashboard
+    
+    UserLogin --> UserType{User Type?}
+    
+    %% Team Lead flow
+    UserType -->|Team Lead/Admin| AdminDashboard[Admin Dashboard]
+    AdminDashboard --> TeamStats[Team Mood Stats]
+    AdminDashboard --> ManageResources[Manage Resources]
+    AdminDashboard --> ManageTeam[Manage Team]
+    
+    ManageTeam --> SendInvites[Send Team Invites]
+    ManageResources --> AddResources[Add Resources]
+    ManageResources --> ListResources[View Resources]
+    
+    %% Team Member flow
+    UserType -->|Team Member| MemberDashboard[Member Dashboard]
+    EmailInvite[Email Invitation] --> AcceptInvite[Accept Invite]
+    AcceptInvite --> SetPassword[Set Password]
+    SetPassword --> MemberDashboard
+    
+    MemberDashboard --> WeeklyCheckin[Weekly Mood Check-in]
+    MemberDashboard --> MoodJournal[Mood Journal]
+    MemberDashboard --> BrowseResources[Browse Resources]
+    MemberDashboard --> PersonalTrends[Personal Mood Trends]
+    
+    WeeklyCheckin --> SubmitMood[Submit Anonymous Mood]
+    SubmitMood --> MoodSubmitted[Mood Submitted]
+    
+    MoodJournal --> CreateEntry[Create Journal Entry]
+    MoodJournal --> ViewEntries[View Journal Entries]
+    CreateEntry --> SaveEntry[Save Entry]
+    ViewEntries --> EntryDetail[Entry Detail View]
+    
+    %% Styling
+    classDef landing fill:#e1f5fe,stroke:#01579b,stroke-width:2px, color:#000000
+    classDef auth fill:#fff9c4,stroke:#f57f17,stroke-width:2px, color:#000000
+    classDef admin fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px, color:#000000
+    classDef member fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px, color:#000000
+    
+    class Start,Landing page
+    class Authentication,TeamLeadSignup,UserLogin,ResetFlow,RequestReset,EmailConfirm,CreateNewPass auth
+    class AdminDashboard,TeamStats,ManageResources,ManageTeam,SendInvites,AddResources,ListResources admin
+    class MemberDashboard,EmailInvite,AcceptInvite,SetPassword,WeeklyCheckin,MoodJournal,BrowseResources,PersonalTrends,SubmitMood,MoodSubmitted,CreateEntry,ViewEntries,SaveEntry,EntryDetail member
+```
 
 ## Security & Privacy
 
