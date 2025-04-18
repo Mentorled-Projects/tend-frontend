@@ -115,10 +115,10 @@ graph TD
     Landing --> Authentication{Authentication?}
     
     %% Authentication flow
-    Authentication -->|Sign Up| TeamLeadSignup[Team Lead Signup
-    Name + Email + Password]
-    Authentication -->|Login| UserLogin[User Login
-    Email + Password]
+    Authentication -->|Sign Up| TeamLeadSignup["Team Lead Signup
+    (Org Name + Email + Password)"]
+    Authentication -->|Login| UserLogin["User Login
+    (Email + Password)"]
     Authentication -->|Password Reset| ResetFlow[Password Reset Flow]
     
     ResetFlow --> RequestReset[Request Reset]
@@ -138,38 +138,48 @@ graph TD
     AdminDashboard --> ManageTeam[Manage Team]
     
     ManageTeam --> SendInvites[Send Team Invites]
+    SendInvites --> EmailInvite[Send Email Invitation]
     ManageResources --> AddResources[Add Resources]
     ManageResources --> ListResources[View Resources]
     
     %% Team Member flow
     UserType -->|Team Member| MemberDashboard[Member Dashboard]
-    EmailInvite[Email Invitation] --> AcceptInvite[Accept Invite]
+    
+    %% Email invitation flow with clear connection
+    EmailInvite --> MemberReceivesEmail[Team Member Receives Email]
+    MemberReceivesEmail --> AcceptInvite[Member Accepts Invite]
     AcceptInvite --> SetPassword[Set Password]
     SetPassword --> MemberDashboard
     
+    %% Member dashboard options
     MemberDashboard --> WeeklyCheckin[Weekly Mood Check-in]
     MemberDashboard --> MoodJournal[Mood Journal]
     MemberDashboard --> BrowseResources[Browse Resources]
-    MemberDashboard --> PersonalTrends[Personal Mood Trends]
     
     WeeklyCheckin --> SubmitMood[Submit Anonymous Mood]
     SubmitMood --> MoodSubmitted[Mood Submitted]
     
+    %% Personal Mood Trend under Mood Journal as requested
     MoodJournal --> CreateEntry[Create Journal Entry]
     MoodJournal --> ViewEntries[View Journal Entries]
+    MoodJournal --> PersonalTrends[Personal Mood Trends]
+    
     CreateEntry --> SaveEntry[Save Entry]
     ViewEntries --> EntryDetail[Entry Detail View]
+    PersonalTrends --> ViewCharts[View Weekly Mood Charts]
     
     %% Styling
-    classDef landing fill:#e1f5fe,stroke:#01579b,stroke-width:2px, color:#000000
-    classDef auth fill:#fff9c4,stroke:#f57f17,stroke-width:2px, color:#000000
-    classDef admin fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px, color:#000000
-    classDef member fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px, color:#000000
+    classDef landing fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    classDef auth fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000000
+    classDef admin fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000000
+    classDef member fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000000
+    classDef email fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000000
     
-    class Start,Landing page
+    class Start,Landing landing
     class Authentication,TeamLeadSignup,UserLogin,ResetFlow,RequestReset,EmailConfirm,CreateNewPass auth
     class AdminDashboard,TeamStats,ManageResources,ManageTeam,SendInvites,AddResources,ListResources admin
-    class MemberDashboard,EmailInvite,AcceptInvite,SetPassword,WeeklyCheckin,MoodJournal,BrowseResources,PersonalTrends,SubmitMood,MoodSubmitted,CreateEntry,ViewEntries,SaveEntry,EntryDetail member
+    class MemberDashboard,AcceptInvite,SetPassword,WeeklyCheckin,MoodJournal,BrowseResources,SubmitMood,MoodSubmitted,CreateEntry,ViewEntries,SaveEntry,EntryDetail,PersonalTrends,ViewCharts member
+    class EmailInvite,MemberReceivesEmail email
 ```
 
 ## Security & Privacy
