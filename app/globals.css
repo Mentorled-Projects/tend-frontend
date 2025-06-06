@@ -1,1 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 @import "tailwindcss";
+html {
+  scroll-behavior: smooth;
+}
+
+@theme {
+  /* colors */
+  --color-tend-black: #0B0B0B;
+  --color-tend-teal: #5BC7CF;
+  --color-tend-white: #FAFCFE;
+  /* --color-tend-gradient': 'linear-gradient(135deg, #E8E8E866 40%, #8ECACD4D 30%)'; */
+  --color-tend-grad: #8ECACD4D;
+
+  /* color-hover */
+  --color-tend-evergreen-hover: #00a778;
+
+  /* font */
+  --font-rubik: "Rubik", sans-serif;
+
+   /* Font Sizes (format: [font-size, line-height]) */
+   --font-size-sm: 14px;
+   --line-height-sm: 20px;
+ 
+   --font-size-base: 16px;
+   --line-height-base: 24px;
+ 
+   --font-size-lg: 20px;
+   --line-height-lg: 28px;
+ 
+   --font-size-xl: 24px;
+   --line-height-xl: 32px;
+ 
+   --font-size-2xl: 30px;
+   --line-height-2xl: 36px;
+
+  /* Custom breakpoints */
+  --screen-sm: 640px;
+  --screen-md: 768px;
+  --screen-lg: 960px;
+  --screen-xl: 1200px;
+}
